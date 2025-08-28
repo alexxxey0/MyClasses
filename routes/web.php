@@ -1,6 +1,7 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -15,7 +16,9 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 // Routes for authenticated users
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', [
+            'hasSemester' => Auth::user()->semesters()->exists()
+        ]);
     })->name('dashboard');
 
     Route::get('/schedule', function () {
