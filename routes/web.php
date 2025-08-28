@@ -18,5 +18,9 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::get('/schedule', function () {
+        return Inertia::render('Schedule');
+    })->name('schedule');
+
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });
