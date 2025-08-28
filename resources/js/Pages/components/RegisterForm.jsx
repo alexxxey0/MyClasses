@@ -16,7 +16,7 @@ function RegisterForm({ setSelectedForm }) {
 
     function submit(e) {
         e.preventDefault();
-        post('/login');
+        post('/register');
     }
 
     return (
