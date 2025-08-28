@@ -7,7 +7,14 @@ function Dashboard(props) {
                         Welcome! Let’s set up your first semester
                     </h2>
 
-                    <ol class="space-y-6 list-decimal list-inside ">
+                    <ol class="space-y-6 list-decimal list-inside">
+
+                        <li>
+                            <h3 class="font-semibold text-lg ">Go to the Semesters Page</h3>
+                            <p class="">
+                                Click the <strong>Add a new semester</strong> button on the semesters page to start creating your first semester.
+                            </p>
+                        </li>
 
                         <li>
                             <h3 class="font-semibold text-lg">Enter School & Semester Info</h3>
