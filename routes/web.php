@@ -10,9 +10,13 @@ Route::get('/', function () {
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
 
+Route::post('/login', [UserController::class, 'login'])->name('login');
+
 // Routes for authenticated users
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });

@@ -22,13 +22,13 @@ function LoginForm({ setSelectedForm }) {
                 <div className='flex flex-col'>
                     <label htmlFor="email">Email address</label>
                     <input className='p-1 border-1 border-black rounded-md' type="email" name="email" required value={data.email} onChange={e => setData('email', e.target.value)} />
-                    {errors.email && <div>{errors.email}</div>}
+                    {errors.email && <div className='text-red-600'>{errors.email}</div>}
                 </div>
 
                 <div className='flex flex-col'>
                     <label htmlFor="password">Password</label>
                     <input className='p-1 border-1 border-black rounded-md' type="password" name="password" required value={data.password} onChange={e => setData('password', e.target.value)} />
-                    {errors.password && <div>{errors.password}</div>}
+                    {errors.password && <div className='text-red-600'>{errors.password}</div>}
                 </div>
             </div>
             <p className='mt-2'>Don't have an account yet? <span onClick={() => setSelectedForm('register')} className='hover:underline cursor-pointer text-blue-500'>Register</span></p>
