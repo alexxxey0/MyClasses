@@ -49,5 +49,9 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Settings');
     })->name('settings');
 
+    Route::get('/semesters/create', function () {
+        return Inertia::render('CreateSemester');
+    });
+
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });
