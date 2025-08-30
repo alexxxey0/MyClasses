@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 
-export default function PeriodScheduleInput({ initialPeriods = 5, onChange }) {
+export default function PeriodScheduleInput({ initialPeriods = 5, onChange, savedPeriods = [] }) {
+
+    // Load saved periods into periods state variable if they exist
     const [periods, setPeriods] = useState(
-        Array.from({ length: initialPeriods }, () => ({ start: "", end: "" }))
+        savedPeriods.length > 0
+            ? savedPeriods
+            : Array.from({ length: initialPeriods }, () => ({ start: "", end: "" }))
     );
 
     // Handle input change

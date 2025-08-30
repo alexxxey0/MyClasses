@@ -38,6 +38,17 @@ function Step1({ setStep }) {
         updateField("periods", updatedPeriods);
     };
 
+    const handlePeriodScheduleInputChange = (e) => {
+        setPeriodScheduleInputEnabled(e.target.checked);
+
+        // If the schedule input has been disabled, clear the periods array
+        if (!e.target.checked) {
+            const updatedData = { ...data, periods: [] };
+            setData(updatedData);
+            sessionStorage.setItem("semesterForm", JSON.stringify(updatedData));
+        }
+    }
+
     // Handle form submit (go to next step)
     const submit = (e) => {
         e.preventDefault();
@@ -158,14 +169,14 @@ function Step1({ setStep }) {
                         type="checkbox"
                         name="enable_period_schedule"
                         checked={periodScheduleInputEnabled}
-                        onChange={(e) => setPeriodScheduleInputEnabled(e.target.checked)}
+                        onChange={handlePeriodScheduleInputChange}
                     />
                     <label htmlFor="enable_period_schedule">Use a period schedule</label>
                 </div>
 
                 {/* Period schedule inputs */}
                 {periodScheduleInputEnabled && (
-                    <PeriodScheduleInput initialPeriods={5} onChange={updatePeriods} />
+                    <PeriodScheduleInput initialPeriods={5} onChange={updatePeriods} savedPeriods={data.periods} />
                 )}
 
                 <SubmitButton text="Continue" />
