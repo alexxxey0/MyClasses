@@ -12,6 +12,10 @@ function Navbar() {
             >
                 Dashboard
             </Link>
+            <Link href="/semesters" style={{ fontWeight: isActive('/semesters') ? 'bold' : 'normal' }}
+            >
+                Semesters
+            </Link>
             <Link href="/schedule" style={{ fontWeight: isActive('/schedule') ? 'bold' : 'normal' }}
             >
                 Schedule

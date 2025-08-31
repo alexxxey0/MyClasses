@@ -34,11 +34,8 @@ class HandleInertiaRequests extends Middleware {
     public function share(Request $request): array {
         // From Inertia documentation (https://inertiajs.com/shared-data)
         return array_merge(parent::share($request), [
-            // Synchronously...
-            'appName' => config('app.name'),
-
-            // Lazily...
             'user' => fn() => $request->user() ? $request->user() : null,
+            'csrf_token' => csrf_token()
         ]);
     }
 }
