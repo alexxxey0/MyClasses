@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SemesterController;
+use App\Models\User;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -16,9 +17,11 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 
 // Routes for authenticated users
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/dashboard', function () {
+        $user = User::where('id', Auth::user()->id)->first();
         return Inertia::render('Dashboard', [
-            'hasSemester' => Auth::user()->semesters()->exists()
+            'hasSemester' => $user->semesters()->exists()
         ]);
     })->name('dashboard');
 
