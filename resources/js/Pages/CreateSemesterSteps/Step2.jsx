@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import SubmitButton from "../components/SubmitButton";
+import { usePage } from "@inertiajs/react";
+import { router } from '@inertiajs/react'
+
 
 function Step2({ setStep }) {
     const [classes, setClasses] = useState([
         { name: "", teacher: "", room: "", mode: "time", schedule: [] }
     ]);
     const [periods, setPeriods] = useState([]);
-
-    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const { csrf_token } = usePage().props;
 
     // Load saved classes and periods from sessionStorage
     useEffect(() => {
@@ -41,6 +44,20 @@ function Step2({ setStep }) {
     const updateClassField = (index, field, value) => {
         const updated = [...classes];
         updated[index][field] = value;
+
+        // When switchind between time and period modes, delete the data about the other mode
+        if (field === 'mode') {
+            if (value === 'time') {
+                updated[index]['schedule'].forEach((schedule_data) => {
+                    delete schedule_data['period'];
+                });
+            } else {
+                updated[index]['schedule'].forEach((schedule_data) => {
+                    delete schedule_data['start'];
+                    delete schedule_data['end'];
+                });
+            }
+        }
         setClasses(updated);
     };
 
@@ -80,11 +97,13 @@ function Step2({ setStep }) {
         }
     };
 
-    const submit = (e) => {
+    function submit(e) {
         e.preventDefault();
-        console.log("Saved classes:", classes);
-        // proceed to next step
+
+        router.post('/create_semester', JSON.parse(sessionStorage.getItem('semesterForm')));
     };
+
+
 
     return (
         <div>
@@ -235,7 +254,7 @@ function Step2({ setStep }) {
                     + Add Another Class
                 </button>
 
-                <SubmitButton text="Continue" />
+                <SubmitButton text="Finish" />
             </form>
         </div>
     );

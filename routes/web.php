@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SemesterController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -52,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/semesters/create', function () {
         return Inertia::render('CreateSemester');
     });
+
+    Route::post('/create_semester', [SemesterController::class, 'create_semester']);
 
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });
