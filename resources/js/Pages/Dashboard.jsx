@@ -1,10 +1,25 @@
 import AddSemesterTutorial from "./components/AddSemesterTutorial";
+import { selectedSemesterIdContext } from "./components/Layout";
+import { useContext } from "react";
+import { usePage } from "@inertiajs/react";
 
 function Dashboard(props) {
+    const { selectedSemesterId, setselectedSemesterId } = useContext(selectedSemesterIdContext);
+    const { user_semesters } = usePage().props;
+    const selectedSemester = user_semesters.find((semester) => semester.id === selectedSemesterId);
+
+
     return (
         <div className="my-8">
             {!props.hasSemester &&
                 <AddSemesterTutorial />
+            }
+            {props.hasSemester &&
+                <div>
+                    <p>{selectedSemester.educational_institution}</p>
+                    <p>{selectedSemester.year}</p>
+                    <p>{selectedSemester.type} semester ({selectedSemester.start} — {selectedSemester.end})</p>
+                </div>
             }
         </div>
     );

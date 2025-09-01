@@ -1,19 +1,19 @@
 import { usePage } from '@inertiajs/react';
 import { Link } from "@inertiajs/react";
 import { useContext } from 'react';
-import { selectedSemesterContext } from './Layout';
+import { selectedSemesterIdContext } from './Layout';
 
 function Header() {
     const { user } = usePage().props;
     const { user_semesters } = usePage().props;
-    const { selectedSemester, setSelectedSemester } = useContext(selectedSemesterContext);
+    const { selectedSemesterId, setselectedSemesterId } = useContext(selectedSemesterIdContext);
 
     return (
         <header className="bg-[#34D399] py-4 flex justify-between items-center">
             <div className='w-2/12 flex items-center gap-x-4'>
                 <img src="/images/myclasses_logo.png" alt="MyClasses logo" />
-                {user_semesters.length > 0 && <select name="selected_semester" className='rounded-md border-2 p-2 shadow-md bg-[#FEFEDA]' 
-                onChange={(e) => setSelectedSemester(e.target.value)}>
+                {user_semesters.length > 0 && <select name="selected_semester" className='rounded-md border-2 p-2 shadow-md bg-[#FEFEDA]'
+                    onChange={(e) => setselectedSemesterId(e.target.value)}>
                     {user_semesters.map((semester) => (
                         <option value={semester.id}>
                             {semester.educational_institution} - {semester.year} - {semester.type}
