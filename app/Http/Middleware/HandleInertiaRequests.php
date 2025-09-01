@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,7 +36,8 @@ class HandleInertiaRequests extends Middleware {
         // From Inertia documentation (https://inertiajs.com/shared-data)
         return array_merge(parent::share($request), [
             'user' => fn() => $request->user() ? $request->user() : null,
-            'csrf_token' => csrf_token()
+            'csrf_token' => csrf_token(),
+            'user_semesters' => $request->user() ? $request->user()->semesters : []
         ]);
     }
 }
