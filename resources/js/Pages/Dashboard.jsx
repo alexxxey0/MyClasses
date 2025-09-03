@@ -38,9 +38,14 @@ function Dashboard(props) {
             // If event (class) has a start time defined, use it, otherwise use the start time of the corresponding period
             start_time: event.start_time !== null ? event.start_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).start_time,
             // Same logic as the start time
-            end_time: event.end_time !== null ? event.end_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).end_time
+            end_time: event.end_time !== null ? event.end_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).end_time,
+            extendedProps: {
+                teacher: event.class.teacher,
+                room: event.class.room
+            }
         }
     });
+    console.log(weeklyEvents);
 
 
 

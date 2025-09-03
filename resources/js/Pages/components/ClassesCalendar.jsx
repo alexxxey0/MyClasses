@@ -43,6 +43,10 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
                 title: ev.title,
                 start: formatISO(startDateTime),
                 end: formatISO(endDateTime),
+                extendedProps: {
+                    teacher: ev.extendedProps.teacher,
+                    room: ev.extendedProps.room
+                }
             });
         });
     });
@@ -59,6 +63,16 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
             allDaySlot={false}
             nowIndicator={true}
             events={events}
+            eventContent={(arg) => {
+                return (
+                    <div className="p-1">
+                        <div className="font-bold text-lg">{arg.event.title}</div>
+                        <div className="ml-2">
+                            {arg.event.extendedProps.teacher}<br/>{arg.event.extendedProps.room}
+                        </div>
+                    </div>
+                );
+            }}
             eventClick={info => alert(`${info.event.title}\n${info.event.start} - ${info.event.end}`)}
             slotLabelFormat={{
                 hour: '2-digit',
