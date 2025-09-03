@@ -25,6 +25,7 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
     const weekStarts = getWeekStarts(semesterStart, semesterEnd);
 
     const events = [];
+    // For each event (class), create a copy of it for every week from the beginning of the semester to the end of the semester
     weeklyEvents.forEach(ev => {
         weekStarts.forEach((weekStart) => {
             const dayOffset = ev.day - 1;
@@ -62,12 +63,12 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
             slotLabelFormat={{
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: false   // 🔑 force 24-hour format
+                hour12: false   // force 24-hour format
             }}
             eventTimeFormat={{
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: false   // 🔑 force 24-hour format
+                hour12: false   // force 24-hour format
             }}
             headerToolbar={{
                 left: "prev,next today",

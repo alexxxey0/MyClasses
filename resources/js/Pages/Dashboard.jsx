@@ -5,21 +5,24 @@ import { useContext, useEffect, useState } from "react";
 import { usePage } from "@inertiajs/react";
 
 function Dashboard(props) {
+    // Currently selected semester's ID (initialized in Layout.jsx)
     const { selectedSemesterId, setselectedSemesterId } = useContext(selectedSemesterIdContext);
 
+
     const { user_semesters } = usePage().props;
+    // Currently selected semester (object)
     const [selectedSemester, setSelectedSemester] = useState(user_semesters.find((semester) => semester.id === selectedSemesterId));
 
     const { user_periods } = usePage().props;
+    // Periods belonging to the currently selected semester
     const [selectedSemesterPeriods, setSelectedSemesterPeriods] = useState(user_periods.filter((period) => period.semester_id === selectedSemesterId));
 
     const { user_events } = usePage().props;
+    // Events (classes) belonging to the currently selected semester
     const [selectedSemesterEvents, setSelectedSemesterEvents] = useState(user_events.filter((event) => event.class.semester_id === selectedSemesterId));
 
-    //console.log(user_events);
 
-
-    // Update current semester's data when user changes the semester
+    // Update the current semester's data when the user selects a different semester
     useEffect(() => {
         setSelectedSemester(user_semesters.find((semester) => semester.id === selectedSemesterId));
         setSelectedSemesterPeriods(user_periods.filter((period) => period.semester_id === selectedSemesterId));
@@ -27,12 +30,14 @@ function Dashboard(props) {
     }, [selectedSemesterId]);
     
 
-    // Process classes to a format that FullCalendar accepts
+    // Process classes to a format that FullCalendar accepts - title, start_time, end_time
     const weeklyEvents = selectedSemesterEvents.map((event) => {
         return {
             title: event.class.name,
             day: event.day_of_week,
+            // If event (class) has a start time defined, use it, otherwise use the start time of the corresponding period
             start_time: event.start_time !== null ? event.start_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).start_time,
+            // Same logic as the start time
             end_time: event.end_time !== null ? event.end_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).end_time
         }
     });
