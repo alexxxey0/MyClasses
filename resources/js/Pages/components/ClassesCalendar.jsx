@@ -2,48 +2,50 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { startOfWeek, addDays, formatISO } from "date-fns";
+import { startOfWeek, addDays, formatISO, isBefore, addWeeks } from "date-fns";
 
-function mapWeeklyEventsToDates(events) {
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday as first day
-    const dayIndex = { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4 };
+export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
 
-    return events.map(ev => {
-        const dayOffset = dayIndex[ev.day];
-        const startDateTime = new Date(weekStart);
-        startDateTime.setDate(weekStart.getDate() + dayOffset);
-        const [startHour, startMinute] = ev.start.split(":").map(Number);
-        startDateTime.setHours(startHour, startMinute);
+    function getWeekStarts(fromDate, toDate) {
+        const result = [];
 
-        const endDateTime = new Date(weekStart);
-        endDateTime.setDate(weekStart.getDate() + dayOffset);
-        const [endHour, endMinute] = ev.end.split(":").map(Number);
-        endDateTime.setHours(endHour, endMinute);
+        // align "fromDate" to the start of its week
+        let current = startOfWeek(fromDate, { weekStartsOn: 1 }); // Monday
 
-        return {
-            title: ev.title,
-            start: formatISO(startDateTime),
-            end: formatISO(endDateTime),
-        };
+        while (isBefore(current, toDate) || current.getTime() === toDate.getTime()) {
+            result.push(current);
+            current = addWeeks(current, 1); // go to next week
+        }
+
+        return result;
+    }
+
+    const semesterStart = new Date(selectedSemester.start);
+    const semesterEnd = new Date(selectedSemester.end);
+    const weekStarts = getWeekStarts(semesterStart, semesterEnd);
+
+    const events = [];
+    weeklyEvents.forEach(ev => {
+        weekStarts.forEach((weekStart) => {
+            const dayOffset = ev.day - 1;
+            const startDateTime = new Date(weekStart);
+            startDateTime.setDate(weekStart.getDate() + dayOffset);
+            const [startHour, startMinute] = ev.start_time.substring(0, 5).split(":").map(Number);
+            startDateTime.setHours(startHour, startMinute);
+
+            const endDateTime = new Date(weekStart);
+            endDateTime.setDate(weekStart.getDate() + dayOffset);
+            const [endHour, endMinute] = ev.end_time.substring(0, 5).split(":").map(Number);
+            endDateTime.setHours(endHour, endMinute);
+
+            events.push({
+                title: ev.title,
+                start: formatISO(startDateTime),
+                end: formatISO(endDateTime),
+            });
+        });
     });
-}
 
-
-const weeklyEvents = [
-    { title: "Team Standup", day: "Monday", start: "09:00", end: "09:30" },
-    { title: "Project Kickoff", day: "Monday", start: "10:00", end: "11:30" },
-    { title: "Client Call", day: "Tuesday", start: "11:00", end: "12:00" },
-    { title: "Design Review", day: "Tuesday", start: "14:00", end: "15:00" },
-    { title: "Code Review", day: "Wednesday", start: "10:00", end: "11:00" },
-    { title: "Team Lunch", day: "Wednesday", start: "12:30", end: "13:30" },
-    { title: "Sprint Planning", day: "Thursday", start: "09:30", end: "11:00" },
-    { title: "Product Demo", day: "Thursday", start: "15:00", end: "16:00" },
-    { title: "Marketing Sync", day: "Friday", start: "10:00", end: "11:00" },
-    { title: "Weekly Wrap-Up", day: "Friday", start: "16:00", end: "17:00" },
-];
-const events = mapWeeklyEventsToDates(weeklyEvents);
-
-export default function ClassesCalendar() {
     return (
         <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -57,6 +59,16 @@ export default function ClassesCalendar() {
             nowIndicator={true}
             events={events}
             eventClick={info => alert(`${info.event.title}\n${info.event.start} - ${info.event.end}`)}
+            slotLabelFormat={{
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false   // 🔑 force 24-hour format
+            }}
+            eventTimeFormat={{
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false   // 🔑 force 24-hour format
+            }}
             headerToolbar={{
                 left: "prev,next today",
                 center: "title",
