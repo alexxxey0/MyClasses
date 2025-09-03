@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware {
         return array_merge(parent::share($request), [
             'user' => fn() => $request->user() ? $request->user() : null,
             'csrf_token' => csrf_token(),
-            'user_semesters' => $request->user() ? $request->user()->semesters : [],
+            'user_semesters' => fn() => $request->user() ? $request->user()->semesters : [],
             'user_events' => $request->user() ? ClassSchedule::whereIn('class_id', $user_classes_ids)->with('class')->get() : [],
             'user_periods' => $request->user() ? $request->user()->periods : []
         ]);

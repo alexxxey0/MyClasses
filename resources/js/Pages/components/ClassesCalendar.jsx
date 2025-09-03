@@ -3,8 +3,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { startOfWeek, addDays, formatISO, isBefore, addWeeks, format } from "date-fns";
+import { useState } from "react";
 
-export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
+export default function ClassesCalendar({ weeklyEvents, selectedSemester, setSelectedClass }) {
 
     function getWeekStarts(fromDate, toDate) {
         const result = [];
@@ -25,6 +26,7 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
     const weekStarts = getWeekStarts(semesterStart, semesterEnd);
 
     const events = [];
+    let eventId = 1;
     // For each event (class), create a copy of it for every week from the beginning of the semester to the end of the semester
     weeklyEvents.forEach(ev => {
         weekStarts.forEach((weekStart) => {
@@ -40,6 +42,7 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
             endDateTime.setHours(endHour, endMinute);
 
             events.push({
+                id: eventId,
                 title: ev.title,
                 start: formatISO(startDateTime),
                 end: formatISO(endDateTime),
@@ -48,6 +51,7 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
                     room: ev.extendedProps.room
                 }
             });
+            eventId++;
         });
     });
 
@@ -73,7 +77,7 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
                     </div>
                 );
             }}
-            eventClick={info => alert(`${info.event.title}\n${info.event.start} - ${info.event.end}`)}
+            eventClick={info => setSelectedClass(info.event)}
             slotLabelFormat={{
                 hour: '2-digit',
                 minute: '2-digit',

@@ -1,13 +1,18 @@
 import AddSemesterTutorial from "./components/AddSemesterTutorial";
 import ClassesCalendar from "./components/ClassesCalendar";
+import ClassPopup from "./components/ClassPopup";
 import { selectedSemesterIdContext } from "./components/Layout";
+import { selectedClassContext } from "./components/Layout";
 import { useContext, useEffect, useState } from "react";
 import { usePage } from "@inertiajs/react";
 
 function Dashboard(props) {
+
+    const { selectedClass, setSelectedClass } = useContext(selectedClassContext);
+
     // Currently selected semester's ID (initialized in Layout.jsx)
     const { selectedSemesterId, setselectedSemesterId } = useContext(selectedSemesterIdContext);
-
+    
 
     const { user_semesters } = usePage().props;
     // Currently selected semester (object)
@@ -28,7 +33,7 @@ function Dashboard(props) {
         setSelectedSemesterPeriods(user_periods.filter((period) => period.semester_id === selectedSemesterId));
         setSelectedSemesterEvents(user_events.filter((event) => event.class.semester_id === selectedSemesterId));
     }, [selectedSemesterId]);
-    
+
 
     // Process classes to a format that FullCalendar accepts - title, start_time, end_time
     const weeklyEvents = selectedSemesterEvents.map((event) => {
@@ -45,7 +50,6 @@ function Dashboard(props) {
             }
         }
     });
-    console.log(weeklyEvents);
 
 
 
@@ -64,10 +68,13 @@ function Dashboard(props) {
 
                     <h1 className="mt-16 text-center text-3xl font-bold mb-4">My schedule</h1>
                     <div className="w-10/12 mx-auto bg-white p-8 rounded-md shadow-md">
-                        <ClassesCalendar weeklyEvents={weeklyEvents} selectedSemester={selectedSemester}/>
+                        <ClassesCalendar weeklyEvents={weeklyEvents} selectedSemester={selectedSemester} setSelectedClass={setSelectedClass} />
+                        {selectedClass !== null && <ClassPopup classInfo={selectedClass} setSelectedClass={setSelectedClass}/>}
                     </div>
                 </div>
             }
+
+
         </div>
     );
 }
