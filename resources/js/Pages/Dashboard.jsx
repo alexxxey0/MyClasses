@@ -1,4 +1,5 @@
 import AddSemesterTutorial from "./components/AddSemesterTutorial";
+import ClassesCalendar from "./components/ClassesCalendar";
 import { selectedSemesterIdContext } from "./components/Layout";
 import { useContext, useEffect, useState } from "react";
 import { usePage } from "@inertiajs/react";
@@ -11,7 +12,7 @@ function Dashboard(props) {
     useEffect(() => {
         setSelectedSemester(user_semesters.find((semester) => semester.id === selectedSemesterId));
     }, [selectedSemesterId]);
-    
+
 
 
     return (
@@ -21,9 +22,16 @@ function Dashboard(props) {
             }
             {props.hasSemester &&
                 <div>
-                    <p>{selectedSemester.educational_institution}</p>
-                    <p>{selectedSemester.year}</p>
-                    <p>{selectedSemester.type} semester ({selectedSemester.start} — {selectedSemester.end})</p>
+                    <div className="text-lg">
+                        <p>{selectedSemester.educational_institution}</p>
+                        <p>{selectedSemester.year}</p>
+                        <p>{selectedSemester.type} semester ({selectedSemester.start} — {selectedSemester.end})</p>
+                    </div>
+
+                    <h1 className="mt-16 text-center text-3xl font-bold mb-4">This week's classes</h1>
+                    <div className="w-10/12 mx-auto bg-white p-8 rounded-md shadow-md">
+                        <ClassesCalendar />
+                    </div>
                 </div>
             }
         </div>

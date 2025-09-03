@@ -17,3 +17,17 @@
 body {
     font-family: 'Inter';
 }
+
+/* Make events look clickable */
+.fc-event {
+    cursor: pointer;
+    /* pointer cursor */
+    transition: background-color 0.2s ease;
+    /* smooth hover transition */
+}
+
+/* Darken background slightly on hover */
+.fc-event:hover {
+    filter: brightness(90%);
+    /* slightly darker */
+}
