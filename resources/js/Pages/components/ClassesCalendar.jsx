@@ -2,7 +2,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { startOfWeek, addDays, formatISO, isBefore, addWeeks } from "date-fns";
+import { startOfWeek, addDays, formatISO, isBefore, addWeeks, format } from "date-fns";
 
 export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
 
@@ -59,16 +59,16 @@ export default function ClassesCalendar({ weeklyEvents, selectedSemester }) {
             hiddenDays={[0, 6]}         // hide Sunday (0) and Saturday (6)
             slotMinTime="08:00:00"      // start of day (8 AM)
             slotMaxTime="22:00:00"      // end of day (10 PM)
-            slotDuration="00:30:00"
+            slotDuration="00:20:00"
             allDaySlot={false}
             nowIndicator={true}
             events={events}
             eventContent={(arg) => {
                 return (
                     <div className="p-1">
-                        <div className="font-bold text-lg">{arg.event.title}</div>
+                        <div className="font-semibold text-lg">{format(arg.event.start, "HH:mm")} - {format(arg.event.end, "HH:mm")}</div>
                         <div className="ml-2">
-                            {arg.event.extendedProps.teacher}<br/>{arg.event.extendedProps.room}
+                            {arg.event.title}<br/>{arg.event.extendedProps.teacher}<br/>{arg.event.extendedProps.room}
                         </div>
                     </div>
                 );
