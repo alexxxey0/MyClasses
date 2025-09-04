@@ -58,7 +58,7 @@ function Dashboard(props) {
             {!props.hasSemester &&
                 <AddSemesterTutorial />
             }
-            {props.hasSemester &&
+            {(props.hasSemester && selectedSemester !== null) &&
                 <div>
                     <div className="text-lg">
                         <p>{selectedSemester.educational_institution}</p>
