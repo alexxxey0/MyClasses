@@ -10,8 +10,8 @@ export const selectedClassContext = createContext();
 
 function Layout(props) {
     //const { flash_message } = usePage().props;
+    const { user } = usePage().props;
     const { user_semesters } = usePage().props;
-    console.log(user_semesters);
     const [selectedSemesterId, setSelectedSemesterId] = useState(user_semesters.length > 0 ? user_semesters[0].id : null);
     const [selectedClass, setSelectedClass] = useState(null);
 
@@ -24,7 +24,7 @@ function Layout(props) {
                     <selectedSemesterIdContext.Provider value={{ selectedSemesterId, setSelectedSemesterId }}>
                         {/* {flash_message && <FlashMessage key={Date.now()} text={flash_message}></FlashMessage>} */}
                         <Header></Header>
-                        <Navbar></Navbar>
+                        {user && <Navbar></Navbar>}
                         <div className="flex-grow mx-32">
                             {props.children}
                         </div>
