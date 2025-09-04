@@ -69,7 +69,7 @@ class SemesterController extends Controller {
             }
         }
 
-        return Inertia::render('Dashboard');
+        return to_route('dashboard');
     }
 
 
