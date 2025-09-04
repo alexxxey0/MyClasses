@@ -11,7 +11,7 @@ function Semesters() {
 
     function deleteSemester(idToDelete) {
         const semestersWithoutDeleted = user_semesters.filter((semester) => semester.id !== idToDelete);
-        setSelectedSemesterId(semestersWithoutDeleted[0].id);
+        setSelectedSemesterId((user_semesters.length > 1) ? semestersWithoutDeleted[0].id : null);
         router.post('/delete_semester', { id: idToDelete });
     }
 
