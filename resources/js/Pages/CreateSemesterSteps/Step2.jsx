@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SubmitButton from "../components/SubmitButton";
 import { usePage } from "@inertiajs/react";
-import { router } from '@inertiajs/react'
+import { router } from '@inertiajs/react';
 
 
 function Step2({ setStep }) {

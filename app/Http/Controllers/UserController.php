@@ -63,8 +63,9 @@ class UserController extends Controller {
         ]);
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
             $request->session()->regenerate(); // prevents session fixation
-            return to_route('dashboard');
+            return to_route('dashboard', ['user' => $user]);
         }
 
         return back()->withErrors([

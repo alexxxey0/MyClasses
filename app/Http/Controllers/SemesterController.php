@@ -69,7 +69,13 @@ class SemesterController extends Controller {
             }
         }
 
+        return Inertia::render('Dashboard');
+    }
 
-        return Inertia::render('dashboard');
+
+    public function delete_semester(Request $request) {
+        Semester::where('id', $request->id)->delete();
+
+        return redirect()->back();
     }
 }
