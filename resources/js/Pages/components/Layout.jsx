@@ -12,7 +12,7 @@ function Layout(props) {
     //const { flash_message } = usePage().props;
     const { user_semesters } = usePage().props;
     console.log(user_semesters);
-    const [selectedSemesterId, setSelectedSemesterId] = useState(user_semesters.length > 0 ? user_semesters[0].id : []);
+    const [selectedSemesterId, setSelectedSemesterId] = useState(user_semesters.length > 0 ? user_semesters[0].id : null);
     const [selectedClass, setSelectedClass] = useState(null);
 
     return (
