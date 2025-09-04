@@ -6,4 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Semester extends Model {
     protected $guarded = [];
+
+    public function classes() {
+        return $this->hasMany(SchoolClass::class);
+    }
 }

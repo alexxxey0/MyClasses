@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Semester;
+use Illuminate\Http\Request;
+use App\Models\ClassSchedule;
 
 class HandleInertiaRequests extends Middleware {
     /**
@@ -33,9 +35,15 @@ class HandleInertiaRequests extends Middleware {
      */
     public function share(Request $request): array {
         // From Inertia documentation (https://inertiajs.com/shared-data)
+
+        $user_classes_ids = $request->user() ? $request->user()->classes()->pluck('classes.id')->toArray() : [];
+
         return array_merge(parent::share($request), [
             'user' => fn() => $request->user() ? $request->user() : null,
-            'csrf_token' => csrf_token()
+            'csrf_token' => csrf_token(),
+            'user_semesters' => fn() => $request->user() ? $request->user()->semesters : [],
+            'user_events' => $request->user() ? ClassSchedule::whereIn('class_id', $user_classes_ids)->with('class')->get() : [],
+            'user_periods' => $request->user() ? $request->user()->periods : []
         ]);
     }
 }

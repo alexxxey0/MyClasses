@@ -1,71 +1,80 @@
+import AddSemesterTutorial from "./components/AddSemesterTutorial";
+import ClassesCalendar from "./components/ClassesCalendar";
+import ClassPopup from "./components/ClassPopup";
+import { selectedSemesterIdContext } from "./components/Layout";
+import { selectedClassContext } from "./components/Layout";
+import { useContext, useEffect, useState } from "react";
+import { usePage } from "@inertiajs/react";
+
 function Dashboard(props) {
+
+    const { selectedClass, setSelectedClass } = useContext(selectedClassContext);
+
+    // Currently selected semester's ID (initialized in Layout.jsx)
+    const { selectedSemesterId, setselectedSemesterId } = useContext(selectedSemesterIdContext);
+    
+
+    const { user_semesters } = usePage().props;
+    // Currently selected semester (object)
+    const [selectedSemester, setSelectedSemester] = useState(user_semesters.find((semester) => semester.id === selectedSemesterId));
+
+    const { user_periods } = usePage().props;
+    // Periods belonging to the currently selected semester
+    const [selectedSemesterPeriods, setSelectedSemesterPeriods] = useState(user_periods.filter((period) => period.semester_id === selectedSemesterId));
+
+    const { user_events } = usePage().props;
+    // Events (classes) belonging to the currently selected semester
+    const [selectedSemesterEvents, setSelectedSemesterEvents] = useState(user_events.filter((event) => event.class.semester_id === selectedSemesterId));
+
+
+    // Update the current semester's data when the user selects a different semester
+    useEffect(() => {
+        setSelectedSemester(user_semesters.find((semester) => semester.id === selectedSemesterId));
+        setSelectedSemesterPeriods(user_periods.filter((period) => period.semester_id === selectedSemesterId));
+        setSelectedSemesterEvents(user_events.filter((event) => event.class.semester_id === selectedSemesterId));
+    }, [selectedSemesterId]);
+
+
+    // Process classes to a format that FullCalendar accepts - title, start_time, end_time
+    const weeklyEvents = selectedSemesterEvents.map((event) => {
+        return {
+            title: event.class.name,
+            day: event.day_of_week,
+            // If event (class) has a start time defined, use it, otherwise use the start time of the corresponding period
+            start_time: event.start_time !== null ? event.start_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).start_time,
+            // Same logic as the start time
+            end_time: event.end_time !== null ? event.end_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).end_time,
+            extendedProps: {
+                teacher: event.class.teacher,
+                room: event.class.room
+            }
+        }
+    });
+
+
+
     return (
         <div className="my-8">
             {!props.hasSemester &&
-                <div className="max-w-3xl mx-auto rounded-2xl p-8">
-                    <h2 className="text-2xl font-bold mb-6">
-                        Welcome! Let’s set up your first semester
-                    </h2>
+                <AddSemesterTutorial />
+            }
+            {(props.hasSemester && selectedSemester !== null) &&
+                <div>
+                    <div className="text-lg">
+                        <p>{selectedSemester.educational_institution}</p>
+                        <p>{selectedSemester.year}</p>
+                        <p>{selectedSemester.type} semester ({selectedSemester.start} — {selectedSemester.end})</p>
+                    </div>
 
-                    <ol className="space-y-6 list-decimal list-inside">
-
-                        <li>
-                            <h3 className="font-semibold text-lg ">Go to the Semesters Page</h3>
-                            <p className="">
-                                Click the <strong>Add a new semester</strong> button on the semesters page to start creating your first semester.
-                            </p>
-                        </li>
-
-                        <li>
-                            <h3 className="font-semibold text-lg">Enter School & Semester Info</h3>
-                            <p className="">
-                                Fill in your <strong>school or university</strong>, <strong>semester name/term</strong>,
-                                <strong>level</strong>, and <strong>start/end dates</strong>.
-                                Optionally, you can set up a <strong>period schedule</strong> if your school has fixed className periods.
-                            </p>
-                        </li>
-
-                        <li>
-                            <h3 className="font-semibold text-lg">Add Your classNamees</h3>
-                            <p className="">
-                                For each className, enter the <strong>name, location, and professor email</strong> (optional).
-                                Choose the <strong>schedule mode</strong>:
-                            </p>
-                            <ul className="list-disc list-inside pl-4 mt-2">
-                                <li><strong>Period Mode:</strong> For regular classNamees that follow your school’s predefined periods.</li>
-                                <li><strong>Time Mode:</strong> For extra classNamees or ones at irregular times.</li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <h3 className="font-semibold text-lg text-gray-900">Set className Schedules</h3>
-                            <p className="">
-                                Define when your classNamees take place:
-                            </p>
-                            <ul className="list-disc list-inside pl-4 mt-2 ">
-                                <li><strong>Period Mode:</strong> Select the <strong>days of the week</strong> and assign the <strong>period numbers</strong>.</li>
-                                <li><strong>Time Mode:</strong> Enter the <strong>days</strong> and <strong>exact start/end times</strong>.</li>
-                                <li>You can also set <strong>double-period classNamees</strong> by choosing consecutive periods.</li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <h3 className="font-semibold text-lg ">Review & Submit</h3>
-                            <p className="">
-                                Double-check your classNamees and schedules.
-                                Once submitted, your semester, classNamees, and schedules will be saved to the database.
-                            </p>
-                        </li>
-                    </ol>
-
-                    <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-md">
-                        <p className="text-sm text-blue-700">
-                            💡 <strong>Tip:</strong> You can always add or edit semesters, classNamees, or schedules later.
-                            Complete all steps for a fully functional semester in your dashboard.
-                        </p>
+                    <h1 className="mt-16 text-center text-3xl font-bold mb-4">My schedule</h1>
+                    <div className="w-10/12 mx-auto bg-white p-8 rounded-md shadow-md">
+                        <ClassesCalendar weeklyEvents={weeklyEvents} selectedSemester={selectedSemester} setSelectedClass={setSelectedClass} />
+                        {selectedClass !== null && <ClassPopup classInfo={selectedClass} setSelectedClass={setSelectedClass}/>}
                     </div>
                 </div>
             }
+
+
         </div>
     );
 }
