@@ -1,12 +1,13 @@
 <?php
 
+use App\Models\User;
 use Inertia\Inertia;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SemesterController;
-use App\Models\User;
-use GuzzleHttp\Psr7\Request;
+use App\Http\Controllers\AssignmentController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -61,6 +62,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/create_semester', [SemesterController::class, 'create_semester']);
 
     Route::post('/delete_semester', [SemesterController::class, 'delete_semester']);
+
+    Route::get('/assignments/create', function () {
+        return Inertia::render('CreateAssignment');
+    });
+
+    Route::post('/create_assignment', [AssignmentController::class, 'create_assignment']);
 
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });

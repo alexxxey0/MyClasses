@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware {
             'user' => $request->user() ? $request->user() : null,
             'csrf_token' => csrf_token(),
             'user_semesters' => fn() => $request->user() ? $request->user()->semesters : [],
+            'user_classes' => fn() => $request->user() ? $request->user()->classes : [],
             'user_events' => fn() => $request->user() ? ClassSchedule::whereIn('class_id', $user_classes_ids)->with('class')->get() : [],
             'user_periods' => fn() => $request->user() ? $request->user()->periods : []
         ]);
