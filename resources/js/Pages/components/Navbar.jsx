@@ -22,7 +22,10 @@ function Navbar() {
             </Link>
             <h2>Classes</h2>
             <h2>Friends</h2>
-            <h2>Assignments</h2>
+            <Link href="/assignments" style={{ fontWeight: isActive('/assignments') ? 'bold' : 'normal' }}
+            >
+                Assignments
+            </Link>
             <h2>Grades</h2>
             <h2>Settings</h2>
         </nav>
