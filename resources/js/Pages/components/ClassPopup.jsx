@@ -5,7 +5,7 @@ export default function ClassPopup({ classInfo, setSelectedClass }) {
     return (
         <div className="bg-white p-4 rounded-md fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="flex justify-between w-full mb-4">
-                <p className="font-bold text-lg">{classInfo.title}</p>
+                <p className="font-bold text-lg w-10/12">{classInfo.title}</p>
                 <X className="scale-130 cursor-pointer text-red-500 hover:scale-140" onClick={() => setSelectedClass(null)} />
             </div>
             <div className="ml-4">

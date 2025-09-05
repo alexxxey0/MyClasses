@@ -38,25 +38,6 @@ function Dashboard(props) {
         }
     }, [selectedSemesterId]);
 
-
-    // Process classes to a format that FullCalendar accepts - title, start_time, end_time
-    const weeklyEvents = selectedSemesterEvents.map((event) => {
-        return {
-            title: event.class.name,
-            day: event.day_of_week,
-            // If event (class) has a start time defined, use it, otherwise use the start time of the corresponding period
-            start_time: event.start_time !== null ? event.start_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).start_time,
-            // Same logic as the start time
-            end_time: event.end_time !== null ? event.end_time : selectedSemesterPeriods.find((period) => period.period_number === event.period_number).end_time,
-            extendedProps: {
-                teacher: event.class.teacher,
-                room: event.class.room
-            }
-        }
-    });
-
-
-
     return (
         <div className="my-8">
             {!props.hasSemester &&
@@ -70,11 +51,6 @@ function Dashboard(props) {
                         <p>{selectedSemester.type} semester ({selectedSemester.start} — {selectedSemester.end})</p>
                     </div>
 
-                    <h1 className="mt-16 text-center text-3xl font-bold mb-4">My schedule</h1>
-                    <div className="w-10/12 mx-auto bg-white p-8 rounded-md shadow-md">
-                        <ClassesCalendar weeklyEvents={weeklyEvents} selectedSemester={selectedSemester} setSelectedClass={setSelectedClass} />
-                        {selectedClass !== null && <ClassPopup classInfo={selectedClass} setSelectedClass={setSelectedClass} />}
-                    </div>
                 </div>
             }
 
