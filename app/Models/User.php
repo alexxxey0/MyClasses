@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable {
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
     protected $guarded = [];
 
     public function getAuthPassword() {
@@ -14,6 +15,10 @@ class User extends Authenticatable {
 
     public function semesters() {
         return $this->hasMany(Semester::class);
+    }
+
+    public function assignments(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep {
+        return $this->hasManyDeepFromRelations($this->classes(), (new SchoolClass())->assignments());
     }
 
     public function classes() {

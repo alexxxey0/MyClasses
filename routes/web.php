@@ -69,5 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/create_assignment', [AssignmentController::class, 'create_assignment']);
 
+    Route::post('/delete_assignment', [AssignmentController::class, 'delete_assignment']);
+
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 });

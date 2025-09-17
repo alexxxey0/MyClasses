@@ -6,4 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Assignment extends Model {
     protected $guarded = [];
+
+    public function class() {
+        return $this->belongsTo(SchoolClass::class, 'class_id', 'id');
+    }
 }

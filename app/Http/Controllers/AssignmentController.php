@@ -21,4 +21,10 @@ class AssignmentController extends Controller {
 
         return to_route('assignments')->with('flash_message', 'Assignment created successfully!');
     }
+
+    public function delete_assignment(Request $request) {
+        Assignment::where('id', $request->id)->delete();
+
+        return redirect()->back();
+    }
 }
